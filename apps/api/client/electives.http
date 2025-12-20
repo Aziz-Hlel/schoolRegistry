@@ -1,0 +1,42 @@
+
+@baseUrl = http://localhost:5000/api
+
+
+### 
+# @name create_elective
+POST {{baseUrl}}/electives
+Content-Type: application/json
+
+{
+    "name": "New elective"
+}
+
+
+### 
+# @name update_elective
+PUT {{baseUrl}}/electives/{{create_elective.response.body.id}}
+Content-Type: application/json
+
+{
+    "name": "New elective Updated"
+}
+
+
+### 
+# @name get_elective
+GET {{baseUrl}}/electives/{{update_elective.response.body.id}}
+Content-Type: application/json
+
+
+
+### 
+# @name delete_elective
+DELETE  {{baseUrl}}/electives/{{get_elective.response.body.id}}
+Content-Type: application/json
+
+
+
+### 
+# @name get_electives
+GET {{baseUrl}}/electives/
+Content-Type: application/json

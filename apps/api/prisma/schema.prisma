@@ -28,6 +28,10 @@ enum Status {
   DELETED
 }
 
+enum SchoolType {
+  HIGH
+  SECONDARY
+}
 
 model User {
   id    String     @id @default(uuid())
@@ -42,4 +46,102 @@ model User {
   updatedAt DateTime @updatedAt
   status Status @default(ACTIVE)
 
+}
+
+
+
+model Region {
+  id        String   @id @default(uuid())
+  name      String @unique
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  schools School[]
+}
+
+model Director {
+  id     String @id @default(uuid())
+  name   String
+  email  String?
+  phone  String?
+
+  school   School @relation(fields: [schoolId], references: [id],onDelete: Cascade)
+  schoolId String  @unique
+}
+
+
+model School {
+  id        String     @id @default(uuid())
+  name      String     @unique
+  type      SchoolType
+
+  regionId  String?
+  region    Region?    @relation(fields: [regionId], references: [id],onDelete: Restrict)
+
+  staffCount Int?
+
+  director   Director? 
+
+  highSchool    HighSchool?
+  secondarySchool SecondarySchool?
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+}
+
+
+
+model HighSchool {
+  schoolId String @id
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SecondarySchool {
+  schoolId String  @id
+  school   School  @relation(fields: [schoolId], references: [id],onDelete: Cascade)
+
+  classStatistics ClassStatistic[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+}
+
+
+enum CurriculumComponentKind {
+  MAJOR
+  ELECTIVE
+}
+
+model CurriculumComponent {
+  id        String @id @default(uuid())
+  name      String
+  kind      CurriculumComponentKind
+
+  classStatistics ClassStatistic[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+
+
+model ClassStatistic {
+  id           String @id @default(uuid())
+
+  maleStudents   Int
+  femaleStudents Int
+
+  componentId  String
+  component CurriculumComponent @relation(fields: [componentId], references: [id])
+  
+  schoolId     String
+  school    SecondarySchool     @relation(fields: [schoolId], references: [schoolId])
+
+  @@unique([schoolId, componentId])
 }

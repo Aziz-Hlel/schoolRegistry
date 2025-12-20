@@ -1,0 +1,42 @@
+
+@baseUrl = http://localhost:5000/api
+
+
+### 
+# @name create_major
+POST {{baseUrl}}/majors
+Content-Type: application/json
+
+{
+    "name": "New major"
+}
+
+
+### 
+# @name update_major
+PUT {{baseUrl}}/majors/{{create_major.response.body.id}}
+Content-Type: application/json
+
+{
+    "name": "New major Updated"
+}
+
+
+### 
+# @name get_major
+GET {{baseUrl}}/majors/{{update_major.response.body.id}}
+Content-Type: application/json
+
+
+
+### 
+# @name delete_major
+DELETE  {{baseUrl}}/majors/{{get_major.response.body.id}}
+Content-Type: application/json
+
+
+
+### 
+# @name get_majors
+GET {{baseUrl}}/majors/
+Content-Type: application/json

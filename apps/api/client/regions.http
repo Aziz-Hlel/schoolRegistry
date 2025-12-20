@@ -1,0 +1,42 @@
+
+@baseUrl = http://localhost:5000/api
+
+
+### 
+# @name create_region
+POST {{baseUrl}}/regions
+Content-Type: application/json
+
+{
+    "name": "New Region"
+}
+
+
+### 
+# @name update_region
+PUT {{baseUrl}}/regions/{{create_region.response.body.id}}
+Content-Type: application/json
+
+{
+    "name": "New Region Updated"
+}
+
+
+### 
+# @name get_region
+GET {{baseUrl}}/regions/{{update_region.response.body.id}}
+Content-Type: application/json
+
+
+
+### 
+# @name delete_region
+DELETE  {{baseUrl}}/regions/{{get_region.response.body.id}}
+Content-Type: application/json
+
+
+
+### 
+# @name get_regions
+GET {{baseUrl}}/regions/
+Content-Type: application/json

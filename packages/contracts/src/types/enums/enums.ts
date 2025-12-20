@@ -25,3 +25,17 @@ export const Status = {
 } as const;
 
 export type Status = (typeof Status)[keyof typeof Status];
+
+export const SchoolType = {
+  HIGH: 'HIGH',
+  SECONDARY: 'SECONDARY',
+} as const;
+
+export type SchoolType = (typeof SchoolType)[keyof typeof SchoolType];
+
+export const CurriculumComponentKind = {
+  MAJOR: 'MAJOR',
+  ELECTIVE: 'ELECTIVE',
+} as const;
+
+export type CurriculumComponentKind = (typeof CurriculumComponentKind)[keyof typeof CurriculumComponentKind];
