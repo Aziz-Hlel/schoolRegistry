@@ -1,14 +1,12 @@
 import z from 'zod';
-import { createDirectorRequestSchema } from '../director/createDirectorRequest';
+import { createSchoolSchema } from '../school/createSchoolSchema';
+import { SchoolType } from '../../types/enums/enums';
+import { createClassStatisticRequestSchema } from '../classStatistic/createClassStatisticRequest';
 
-const createHighSchoolRequestSchema = z.object({
-  name: z.string().min(2).max(200),
-  address: z.string().min(5).max(300),
-  staffCount: z.coerce.number().min(0).max(1000).optional(),
-  regionId: z.uuid(),
-  director: createDirectorRequestSchema.optional(),
+const createHighSchoolRequestSchema = createSchoolSchema.extend({
+  type: z.literal(SchoolType.HIGH).catch(SchoolType.HIGH),
+  classStatistics: z.array(createClassStatisticRequestSchema),
 });
-
 type CreateHighSchoolRequest = z.infer<typeof createHighSchoolRequestSchema>;
 
 export { createHighSchoolRequestSchema };

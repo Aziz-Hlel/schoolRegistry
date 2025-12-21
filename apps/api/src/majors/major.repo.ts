@@ -5,7 +5,7 @@ import { CurriculumComponentKind } from '@contracts/types/enums/enums';
 
 class MajorRepo {
   async isMajorNameTaken(name: string): Promise<boolean> {
-    const major = await prisma.curriculumComponent.findUnique({
+    const major = await prisma.curriculumComponent.count({
       where: {
         name: name,
         kind: CurriculumComponentKind.MAJOR,

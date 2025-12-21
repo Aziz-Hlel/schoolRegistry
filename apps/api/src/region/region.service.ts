@@ -21,7 +21,7 @@ class RegionService {
       },
     });
 
-    const regionRepsonse = RegionMapper.toRegionResponse(region);
+    const regionRepsonse = RegionMapper.toResponse(region);
 
     return regionRepsonse;
   }
@@ -48,7 +48,7 @@ class RegionService {
       },
     });
 
-    const regionResponse = RegionMapper.toRegionResponse(updatedRegion);
+    const regionResponse = RegionMapper.toResponse(updatedRegion);
 
     return regionResponse;
   }
@@ -60,7 +60,7 @@ class RegionService {
       throw new NotFoundError('Region id not found');
     }
 
-    const regionResponse = RegionMapper.toRegionResponse(region);
+    const regionResponse = RegionMapper.toResponse(region);
 
     return regionResponse;
   }
@@ -68,7 +68,7 @@ class RegionService {
   async getRegions(): Promise<RegionResponse[]> {
     const regions = await prisma.region.findMany();
 
-    const regionResponses = RegionMapper.toRegionResponses(regions);
+    const regionResponses = RegionMapper.toResponses(regions);
 
     return regionResponses;
   }

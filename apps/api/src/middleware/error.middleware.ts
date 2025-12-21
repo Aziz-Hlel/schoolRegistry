@@ -1,4 +1,3 @@
-// src/middleware/error.middleware.ts
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import ENV from '../config/ENV';
@@ -26,6 +25,10 @@ const handleZodError = (error: ZodError<unknown>, req: Request): ApiError => {
 };
 
 const errorHandler = (error: Error, req: Request, res: Response<ApiError>, next: NextFunction) => {
+  if (res.headersSent) {
+    return next(error);
+  }
+
   const path = req.originalUrl;
   // Zod validation errors
   if (error instanceof ZodError) {
@@ -61,15 +64,15 @@ const errorHandler = (error: Error, req: Request, res: Response<ApiError>, next:
 };
 
 export const globalErrorHandler = (error: Error, req: Request, res: Response<ApiError>, next: NextFunction) => {
-  try {
-    errorHandler(error, req, res, next);
-  } catch (error) {
-    logger.fatal({ err: error, path: req.originalUrl }, 'Error when handling error');
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error (error handler failed)',
-      timestamp: new Date(),
-      path: req.originalUrl,
-    });
-  }
+  // try {
+  errorHandler(error, req, res, next);
+  // } catch (error) {
+  //   logger.fatal({ err: error, path: req.originalUrl }, 'Error when handling error');
+  //   res.status(500).json({
+  //     success: false,
+  //     message: 'Internal server error (error handler failed)',
+  //     timestamp: new Date(),
+  //     path: req.originalUrl,
+  //   });
+  // }
 };

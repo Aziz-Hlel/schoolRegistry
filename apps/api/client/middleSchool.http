@@ -1,0 +1,56 @@
+
+@baseUrl = http://localhost:5000/api
+
+
+### 
+# @name create_middleSchool
+POST {{baseUrl}}/middle-Schools
+Content-Type: application/json
+
+{
+    "name": "New middle-School :DD",
+    "staffCount": 150,
+    "regionId": "e6e39204-39ae-45cc-9f65-14fdade79502",
+    "director": {
+        "name": "John",
+        "phone": 50099988,
+        "email": "john.doe@example.com"
+    }
+}
+
+
+### 
+# @name update_middleSchool
+PUT {{baseUrl}}/middle-Schools/{{create_middleSchool.response.body.id}}
+Content-Type: application/json
+
+{
+    "name": "New middle-School-updatedd",
+    "staffCount": 99,
+    "regionId": "e6e39204-39ae-45cc-9f65-14fdade79502",
+    "director": {
+        "name": "John updated",
+        "phone": 55085050,
+        "email": "john.doe@updated.com"
+    }
+}
+
+
+### 
+# @name get_middleSchool
+GET {{baseUrl}}/middle-Schools/{{update_middleSchool.response.body.id}}
+Content-Type: application/json
+
+
+
+### 
+# @name delete_middleSchool
+DELETE  {{baseUrl}}/middle-Schools/{{get_middleSchool.response.body.id}}
+Content-Type: application/json
+
+
+
+### 
+# @name get_middleSchools
+GET {{baseUrl}}/middle-Schools/
+Content-Type: application/json

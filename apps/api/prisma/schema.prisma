@@ -30,7 +30,7 @@ enum Status {
 
 enum SchoolType {
   HIGH
-  SECONDARY
+  MIDDLE
 }
 
 model User {
@@ -73,7 +73,7 @@ model Director {
 
 model School {
   id        String     @id @default(uuid())
-  name      String     @unique
+  name      String     
   type      SchoolType
 
   regionId  String?
@@ -84,31 +84,31 @@ model School {
   director   Director? 
 
   highSchool    HighSchool?
-  secondarySchool SecondarySchool?
+  secondarySchool MiddleSchool?
 
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
+  @@unique([name, type])
+
 }
+model MiddleSchool {
+  schoolId String  @id
+  school   School  @relation(fields: [schoolId], references: [id],onDelete: Cascade)
 
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+}
 
 model HighSchool {
   schoolId String @id
   school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model SecondarySchool {
-  schoolId String  @id
-  school   School  @relation(fields: [schoolId], references: [id],onDelete: Cascade)
-
   classStatistics ClassStatistic[]
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  updatedAt DateTime @updatedAt
 }
 
 
@@ -126,6 +126,10 @@ model CurriculumComponent {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@unique([name, kind])
+
 }
 
 
@@ -138,10 +142,10 @@ model ClassStatistic {
   femaleStudents Int
 
   componentId  String
-  component CurriculumComponent @relation(fields: [componentId], references: [id])
+  component CurriculumComponent @relation(fields: [componentId], references: [id], onDelete: Cascade)
   
   schoolId     String
-  school    SecondarySchool     @relation(fields: [schoolId], references: [schoolId])
+  school    HighSchool     @relation(fields: [schoolId], references: [schoolId], onDelete: Cascade)
 
   @@unique([schoolId, componentId])
 }

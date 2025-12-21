@@ -1,6 +1,6 @@
 import { CurriculumComponentKind } from '../../types/enums/enums';
 
-export type OptionalSubjectResponse = {
+export type ElectiveResponse = {
   id: string;
   name: string;
   kind: CurriculumComponentKind;

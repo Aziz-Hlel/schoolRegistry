@@ -6,7 +6,7 @@
     "prepare": "husky",
     "format:fix": "prettier --write .",
     "local": "node scripts/docker-up.js local && pnpm -r run dev",
-    "dev": "node scripts/docker-up.js dev",
+    "dev": "pnpm -r run dev",
     "test": ""
   },
   "lint-staged": {

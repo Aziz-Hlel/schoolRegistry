@@ -1,15 +1,15 @@
-import { CreateOptionalSubjectRequest } from '@contracts/schemas/optionalSubject/createOptionalSubjectRequest';
+import { CreateElectiveRequest } from '@contracts/schemas/elective/createElectiveRequest';
 import { electiveRepo } from './Elective.repo';
 import { BadRequestError, NotFoundError } from '@/err/customErrors';
-import { OptionalSubjectResponse } from '@contracts/schemas/optionalSubject/OptionalSubjectResponse';
+import { ElectiveResponse } from '@contracts/schemas/elective/ElectiveResponse';
 import { ElectiveMapper } from './Elective.mapper';
-import { UpdateOptionalSubjectRequest } from '@contracts/schemas/optionalSubject/updateOptionalSubjectRequest';
+import { UpdateElectiveRequest } from '@contracts/schemas/elective/updateElectiveRequest';
 
 class ElectiveService {
-  async createOptionalSubject(optionalSubject: CreateOptionalSubjectRequest): Promise<OptionalSubjectResponse> {
+  async createOptionalSubject(optionalSubject: CreateElectiveRequest): Promise<ElectiveResponse> {
     const { name } = optionalSubject;
 
-    const isOptionalSubjectNameTaken = await electiveRepo.isOptionalSubjectNameTaken(name);
+    const isOptionalSubjectNameTaken = await electiveRepo.isElectiveNameTaken(name);
 
     if (isOptionalSubjectNameTaken) {
       throw new BadRequestError('Optional Subject name is already taken');
@@ -21,7 +21,7 @@ class ElectiveService {
     return optionalSubjectResponse;
   }
 
-  async updateOptionalSubject(id: string, schema: UpdateOptionalSubjectRequest): Promise<OptionalSubjectResponse> {
+  async updateOptionalSubject(id: string, schema: UpdateElectiveRequest): Promise<ElectiveResponse> {
     const optionalSubjectRecord = await electiveRepo.getOptionalSubjectById(id);
 
     if (!optionalSubjectRecord) {
@@ -35,7 +35,7 @@ class ElectiveService {
     return optionalSubjectResponse;
   }
 
-  async getOptionalSubjectById(id: string): Promise<OptionalSubjectResponse> {
+  async getOptionalSubjectById(id: string): Promise<ElectiveResponse> {
     const optionalSubjectRecord = await electiveRepo.getOptionalSubjectById(id);
 
     if (!optionalSubjectRecord) {
@@ -47,7 +47,7 @@ class ElectiveService {
     return optionalSubjectResponse;
   }
 
-  async getAllOptionalSubjects(): Promise<OptionalSubjectResponse[]> {
+  async getAllOptionalSubjects(): Promise<ElectiveResponse[]> {
     const optionalSubjects = await electiveRepo.getAllOptionalSubjects();
 
     const optionalSubjectResponses = ElectiveMapper.toResponses(optionalSubjects);

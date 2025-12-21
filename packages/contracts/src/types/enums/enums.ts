@@ -28,7 +28,7 @@ export type Status = (typeof Status)[keyof typeof Status];
 
 export const SchoolType = {
   HIGH: 'HIGH',
-  SECONDARY: 'SECONDARY',
+  MIDDLE: 'MIDDLE',
 } as const;
 
 export type SchoolType = (typeof SchoolType)[keyof typeof SchoolType];

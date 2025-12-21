@@ -1,8 +1,8 @@
 import { CurriculumComponent } from '@/generated/prisma/client';
-import { OptionalSubjectResponse } from '@contracts/schemas/optionalSubject/OptionalSubjectResponse';
+import { ElectiveResponse } from '@contracts/schemas/elective/ElectiveResponse';
 
 export class ElectiveMapper {
-  static toResponse(optionalSubject: CurriculumComponent): OptionalSubjectResponse {
+  static toResponse(optionalSubject: CurriculumComponent): ElectiveResponse {
     return {
       id: optionalSubject.id,
       name: optionalSubject.name,
@@ -10,7 +10,7 @@ export class ElectiveMapper {
     };
   }
 
-  static toResponses(optionalSubjects: CurriculumComponent[]): OptionalSubjectResponse[] {
+  static toResponses(optionalSubjects: CurriculumComponent[]): ElectiveResponse[] {
     return optionalSubjects.map(this.toResponse);
   }
 }

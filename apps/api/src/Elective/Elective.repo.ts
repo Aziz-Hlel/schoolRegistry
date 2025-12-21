@@ -1,11 +1,11 @@
 import { prisma } from '@/bootstrap/db.init';
 import { CurriculumComponent } from '@/generated/prisma/client';
-import { CreateOptionalSubjectRequest } from '@contracts/schemas/optionalSubject/createOptionalSubjectRequest';
+import { CreateElectiveRequest } from '@contracts/schemas/elective/createElectiveRequest';
 import { CurriculumComponentKind } from '@contracts/types/enums/enums';
 
 class ElectiveRepo {
-  async isOptionalSubjectNameTaken(name: string): Promise<boolean> {
-    const optionalSubject = await prisma.curriculumComponent.findUnique({
+  async isElectiveNameTaken(name: string): Promise<boolean> {
+    const optionalSubject = await prisma.curriculumComponent.count({
       where: {
         name: name,
         kind: CurriculumComponentKind.ELECTIVE,
@@ -14,7 +14,7 @@ class ElectiveRepo {
     return optionalSubject !== null;
   }
 
-  async createOptionalSubject(schema: CreateOptionalSubjectRequest): Promise<CurriculumComponent> {
+  async createOptionalSubject(schema: CreateElectiveRequest): Promise<CurriculumComponent> {
     const newOptionalSubject = await prisma.curriculumComponent.create({
       data: {
         ...schema,
@@ -24,7 +24,7 @@ class ElectiveRepo {
     return newOptionalSubject;
   }
 
-  async updateOptionalSubject(id: string, schema: CreateOptionalSubjectRequest): Promise<CurriculumComponent> {
+  async updateOptionalSubject(id: string, schema: CreateElectiveRequest): Promise<CurriculumComponent> {
     const updatedOptionalSubject = await prisma.curriculumComponent.update({
       where: {
         id: id,
