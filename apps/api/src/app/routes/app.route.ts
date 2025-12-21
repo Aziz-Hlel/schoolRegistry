@@ -7,6 +7,7 @@ import { majorRouter } from '@/majors/major.route';
 import { electiveRouter } from '@/Elective/Elective.route';
 import { directorRouter } from '@/director/director.route';
 import { middleSchoolRouter } from '@/MiddleSchool/middleSchool.route';
+import { highSchoolRouter } from '@/highSchool/highSchool.route';
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.use('/majors', majorRouter);
 router.use('/electives', electiveRouter);
 router.use('/directors', directorRouter);
 router.use('/middle-schools', middleSchoolRouter);
+router.use('/high-schools', highSchoolRouter);
 
 export const AppRouter = router;

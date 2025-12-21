@@ -12,6 +12,7 @@ import { Toaster } from 'sonner';
 import Sidebar from './pages/Sidebar';
 import { UserSessionProvider } from './context/UserConext';
 import UserPage from './pages/User';
+import Regions from './pages/Regions';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,7 +26,7 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  const dir: 'rtl' | 'ltr' = 'ltr';
+  const dir: 'rtl' | 'ltr' = 'rtl';
 
   return (
     <div dir={dir}>
@@ -46,6 +47,7 @@ function App() {
                       <Route index path="/profile" element={<Profile />} />
 
                       <Route path="users/" element={<UserPage />}></Route>
+                      <Route path="regions/" element={<Regions />}></Route>
                     </Route>
                   </Route>
                 </Route>

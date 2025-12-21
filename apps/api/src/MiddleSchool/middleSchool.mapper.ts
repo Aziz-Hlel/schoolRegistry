@@ -20,6 +20,7 @@ class MiddleSchoolMapper {
       region: middleSchool.school.region ? RegionMapper.toResponse(middleSchool.school.region) : null,
       director: middleSchool.school.director ? DirectorMapper.toResponse(middleSchool.school.director) : null,
       staffCount: middleSchool.school.staffCount,
+      isPublic: middleSchool.school.isPublic,
       createdAt: middleSchool.school.createdAt.toISOString(),
       updatedAt: middleSchool.school.updatedAt.toISOString(),
     };

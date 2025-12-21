@@ -13,6 +13,7 @@ export class HighSchoolMapper {
       region: entity.school.region ? RegionMapper.toResponse(entity.school.region) : null,
       director: entity.school.director ? DirectorMapper.toResponse(entity.school.director) : null,
       staffCount: entity.school.staffCount,
+      isPublic: entity.school.isPublic,
       createdAt: entity.school.createdAt.toISOString(),
       updatedAt: entity.school.updatedAt.toISOString(),
       classStatistics: ClassStatisticMapper.toResponses(entity.classStatistics),

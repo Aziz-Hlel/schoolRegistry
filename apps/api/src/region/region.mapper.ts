@@ -6,6 +6,7 @@ export class RegionMapper {
     return {
       id: region.id,
       name: region.name,
+      sortOrder: region.sortOrder,
     };
   }
 

@@ -2,10 +2,10 @@ import testFirebaseConnection from './test-connection/firebase.test.connection';
 import { testDbConnection } from './test-connection/db.test.connection';
 import { connectRedis } from './redis.init';
 import seed from '@/seeds';
-import { seedHighSchools } from '@/seeds/fakes/school.fake';
+import { seedHighSchools, seedRegions } from '@/seeds/fakes/school.fake';
 
 const asyncBootstrapHandlers = async () => {
-  await Promise.all([testFirebaseConnection(), testDbConnection(), connectRedis(), seedHighSchools]);
+  await Promise.all([testFirebaseConnection(), testDbConnection(), connectRedis(), seedRegions(), seedHighSchools]);
   await seed();
 };
 

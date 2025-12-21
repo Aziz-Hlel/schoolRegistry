@@ -6,7 +6,7 @@ import { faker } from '@faker-js/faker';
 
 faker.seed(1); // Ensure consistent fake data across runs
 
-const fakeRegionsNames = [
+const fakeRegionsNames: readonly string[] = [
   'Sousse Ville',
   'Hammam Sousse',
   'Akouda',
@@ -20,9 +20,10 @@ const fakeRegionsNames = [
   'Bouficha',
 ] as const;
 
-const fakeRegions = fakeRegionsNames.map((regionName) => ({
+const fakeRegions = fakeRegionsNames.map((regionName, index) => ({
   id: faker.string.uuid(),
   name: regionName,
+  sortOrder: index,
 }));
 
 const fakeDirector = () => ({
@@ -89,6 +90,16 @@ const createFakeHighSchools: () => HighSchoolCreateInput = () => {
       },
     },
   };
+};
+
+export const seedRegions = async () => {
+  fakeRegions.forEach(async (region) => {
+    await prisma.region.upsert({
+      where: { name: region.name },
+      create: region,
+      update: {},
+    });
+  });
 };
 
 export const seedHighSchools = async () => {

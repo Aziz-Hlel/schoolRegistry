@@ -53,7 +53,7 @@ model User {
 model Region {
   id        String   @id @default(uuid())
   name      String @unique
-  
+  sortOrder Int    @unique  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -80,6 +80,8 @@ model School {
   region    Region?    @relation(fields: [regionId], references: [id],onDelete: Restrict)
 
   staffCount Int?
+
+  isPublic   Boolean    @default(true)
 
   director   Director? 
 
@@ -122,6 +124,8 @@ model CurriculumComponent {
   name      String
   kind      CurriculumComponentKind
 
+  sortOrder Int
+
   classStatistics ClassStatistic[]
 
   createdAt DateTime @default(now())
@@ -129,6 +133,7 @@ model CurriculumComponent {
 
   @@index([name])
   @@unique([name, kind])
+  @@unique([kind, sortOrder])
 
 }
 

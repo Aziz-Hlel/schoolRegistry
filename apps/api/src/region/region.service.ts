@@ -4,10 +4,11 @@ import { CreateRegionRequest } from '@contracts/schemas/regions/createRegionRequ
 import { RegionRepo } from './region.repo';
 import { RegionResponse } from '@contracts/schemas/regions/regionResponse';
 import { RegionMapper } from './region.mapper';
+import { UpdateRegionRequest } from '@contracts/schemas/regions/updateRegionRequest';
 
 class RegionService {
-  async createRegion(data: CreateRegionRequest): Promise<RegionResponse> {
-    const { name } = data;
+  async createRegion(schema: CreateRegionRequest): Promise<RegionResponse> {
+    const { name } = schema;
 
     const isRegionNameTaken = await RegionRepo.isRegionNameTaken(name);
 
@@ -15,18 +16,15 @@ class RegionService {
       throw new BadRequestError('Region name is already taken');
     }
 
-    const region = await prisma.region.create({
-      data: {
-        name,
-      },
-    });
+    const sortOrder = await RegionRepo.getNewRegionSortOrder();
+    const region = await RegionRepo.createRegion(schema, sortOrder);
 
     const regionRepsonse = RegionMapper.toResponse(region);
 
     return regionRepsonse;
   }
 
-  async updateRegion(regionId: string, data: CreateRegionRequest): Promise<RegionResponse> {
+  async updateRegion(regionId: string, data: UpdateRegionRequest): Promise<RegionResponse> {
     const { name } = data;
 
     const isRegionNameTaken = await RegionRepo.isRegionNameTaken(name);
@@ -41,12 +39,7 @@ class RegionService {
       throw new BadRequestError('Region id not found');
     }
 
-    const updatedRegion = await prisma.region.update({
-      where: { id: regionId },
-      data: {
-        name,
-      },
-    });
+    const updatedRegion = await RegionRepo.updateRegion(regionId, data);
 
     const regionResponse = RegionMapper.toResponse(updatedRegion);
 
@@ -66,7 +59,7 @@ class RegionService {
   }
 
   async getRegions(): Promise<RegionResponse[]> {
-    const regions = await prisma.region.findMany();
+    const regions = await RegionRepo.getAll();
 
     const regionResponses = RegionMapper.toResponses(regions);
 

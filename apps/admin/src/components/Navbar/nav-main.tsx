@@ -1,4 +1,4 @@
-import { ChevronRight, LayoutDashboard, Settings2, UsersRound } from 'lucide-react';
+import { ChevronRight, Earth, LayoutDashboard, School, Settings2, UsersRound } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
   SidebarGroup,
@@ -43,9 +43,39 @@ const navRoutes: NavRoute[] = [
     ],
   },
   {
+    title: 'المعاهد',
+    url: '/dashboard',
+    icon: School,
+    isActive: true,
+    items: [
+      {
+        title: 'نظرة عامة',
+        url: '/dashboard/overview',
+        isActive: true,
+      },
+      {
+        title: 'الشعب',
+        url: '/dashboard/stats',
+        isActive: false,
+      },
+      {
+        title: 'المواد الاضافية',
+        url: '/dashboard/stats',
+        isActive: false,
+      },
+    ],
+  },
+
+  {
     title: 'Users',
     url: '/users',
     icon: UsersRound,
+    isActive: true,
+  },
+  {
+    title: 'المعتمديات',
+    url: '/regions',
+    icon: Earth,
     isActive: true,
   },
   {

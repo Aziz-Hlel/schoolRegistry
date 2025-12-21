@@ -8,6 +8,7 @@ export type SchoolResponse = {
   region: RegionResponse | null;
   director: DirectorResponse | null;
   staffCount: number | null;
+  isPublic: boolean;
   type: SchoolType;
   createdAt: string;
   updatedAt: string;
