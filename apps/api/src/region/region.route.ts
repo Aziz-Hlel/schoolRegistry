@@ -8,6 +8,10 @@ router.post(
   '/',
   asyncHandler((req: Request, res: Response) => regionController.createRegion(req, res)),
 );
+router.post(
+  '/order',
+  asyncHandler((req: Request, res: Response) => regionController.orderRegions(req, res)),
+);
 router.put(
   '/:id',
   asyncHandler((req: Request, res: Response) => regionController.updateRegion(req, res)),

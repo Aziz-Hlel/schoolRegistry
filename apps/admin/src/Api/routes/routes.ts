@@ -25,6 +25,7 @@ const apiRoutes = {
     getById: (id: string) => `/regions/${id}` as const,
     update: (id: string) => `/regions/${id}` as const,
     delete: (id: string) => `/regions/${id}` as const,
+    order: () => `/regions/order` as const,
   },
 
   majors: {

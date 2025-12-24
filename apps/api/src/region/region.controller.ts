@@ -4,6 +4,7 @@ import { regionService } from './region.service';
 import { SimpleApiResponse } from '@contracts/types/api/SimpleApiResponse.dto';
 import { updateRegionRequestSchema } from '@contracts/schemas/regions/updateRegionRequest';
 import { RegionResponse } from '@contracts/schemas/regions/regionResponse';
+import { OrderRegionRequestSchema } from '@contracts/schemas/regions/orderRegionRequest';
 
 class RegionController {
   async createRegion(req: Request, res: Response<RegionResponse>) {
@@ -41,6 +42,14 @@ class RegionController {
     const regions = await regionService.getRegions();
 
     res.status(200).json(regions);
+  }
+
+  async orderRegions(req: Request, res: Response<SimpleApiResponse>) {
+    const parsedBody = OrderRegionRequestSchema.parse(req.body);
+
+    await regionService.orderRegions(parsedBody);
+
+    res.status(200).json({ message: 'Regions sorted successfully' });
   }
 }
 

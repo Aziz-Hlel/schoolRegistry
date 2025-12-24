@@ -5,7 +5,7 @@ import seed from '@/seeds';
 import { seedHighSchools, seedRegions } from '@/seeds/fakes/school.fake';
 
 const asyncBootstrapHandlers = async () => {
-  await Promise.all([testFirebaseConnection(), testDbConnection(), connectRedis(), seedRegions(), seedHighSchools]);
+  await Promise.all([testFirebaseConnection(), testDbConnection(), connectRedis(), seedRegions, seedHighSchools]);
   await seed();
 };
 

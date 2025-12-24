@@ -23,7 +23,7 @@ const RegionsMain = () => {
   return (
     <div>
       {regions.map((region) => (
-        <Card className=" m-8 w-96 py-4">
+        <Card className=" m-8 w-96 py-4" key={region.id}>
           <CardContent className=" flex  justify-between items-center">
             <div key={region.id}>{region.name}</div>
 

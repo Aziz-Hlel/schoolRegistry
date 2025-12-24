@@ -23,7 +23,7 @@ const RegionsIndex = () => {
             <CardTitle className="text-4xl">المعتمديات</CardTitle>
             <CardDescription>يمكنك إدارة جميع المعتمديات هنا بسهولة وفعالية.</CardDescription>
             <CardAction className=" flex gap-4">
-              <Button>ترتيب المعتمديات</Button>
+              <Button onClick={() => setOpenDialog('order')}>ترتيب المعتمديات</Button>
               <Button onClick={() => setOpenDialog('add')}>إضافة معتمدية جديدة</Button>
             </CardAction>
           </CardHeader>
@@ -31,8 +31,8 @@ const RegionsIndex = () => {
             <RegionsMain />
           </CardContent>
         </Card>
+        <DialogContainer />
       </div>
-      <DialogContainer />
     </div>
   );
 };

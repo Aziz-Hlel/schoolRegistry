@@ -21,7 +21,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { updateRegionRequestSchema, type UpdateRegionRequest } from '@contracts/schemas/regions/updateRegionRequest';
 
 const EditDialog = () => {
-  const { handleCancel, currentRow } = useSelectedRow();
+  const { handleCancel, currentRow, openDialog } = useSelectedRow();
   const queryClient = useQueryClient();
 
   const form = useForm<UpdateRegionRequest>({
@@ -58,7 +58,7 @@ const EditDialog = () => {
 
   console.log('erors : ', form.formState.errors);
   return (
-    <Dialog onOpenChange={onOpenChange} open={true}>
+    <Dialog onOpenChange={onOpenChange} open={openDialog === 'edit'}>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <DialogHeader>

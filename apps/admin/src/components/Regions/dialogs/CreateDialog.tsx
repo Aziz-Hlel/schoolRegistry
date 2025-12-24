@@ -22,7 +22,7 @@ import { useSelectedRow } from '../Regions.context';
 import { Spinner } from '@/components/ui/spinner';
 
 const CreateDialog = () => {
-  const { handleCancel } = useSelectedRow();
+  const { handleCancel, openDialog } = useSelectedRow();
   const queryClient = useQueryClient();
 
   const form = useForm<CreateRegionRequest>({
@@ -57,7 +57,7 @@ const CreateDialog = () => {
 
   console.log('erors : ', form.formState.errors);
   return (
-    <Dialog onOpenChange={onOpenChange} open={true}>
+    <Dialog onOpenChange={onOpenChange} open={openDialog === 'add'}>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <DialogHeader>

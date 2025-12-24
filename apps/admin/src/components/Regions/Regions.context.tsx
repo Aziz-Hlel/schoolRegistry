@@ -1,7 +1,7 @@
 import type { RegionResponse } from '@contracts/schemas/regions/regionResponse';
 import { createContext, useContext, useState } from 'react';
 
-type TableDialogType = 'add' | 'edit' | 'delete' | null;
+type TableDialogType = 'add' | 'edit' | 'delete' | 'order' | null;
 
 type SelectedRowContextType = {
   openDialog: TableDialogType;

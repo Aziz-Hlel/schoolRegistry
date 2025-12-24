@@ -5,6 +5,7 @@ import { RegionRepo } from './region.repo';
 import { RegionResponse } from '@contracts/schemas/regions/regionResponse';
 import { RegionMapper } from './region.mapper';
 import { UpdateRegionRequest } from '@contracts/schemas/regions/updateRegionRequest';
+import { OrderRegionRequest } from '@contracts/schemas/regions/orderRegionRequest';
 
 class RegionService {
   async createRegion(schema: CreateRegionRequest): Promise<RegionResponse> {
@@ -78,6 +79,27 @@ class RegionService {
     await prisma.region.delete({
       where: { id: regionId },
     });
+  }
+
+  async orderRegions(regionIdsInOrder: OrderRegionRequest): Promise<void> {
+    const existingRegions = await RegionRepo.getAll();
+    const existingRegionIds = new Set<string>();
+    existingRegions.forEach((region) => existingRegionIds.add(region.id));
+
+    const uniqueRegionIds = new Set(regionIdsInOrder.regions);
+
+    // Validate that all provided IDs exist
+    for (const regionId of uniqueRegionIds) {
+      if (!existingRegionIds.has(regionId)) {
+        throw new BadRequestError(`Region ID ${regionId} does not exist`);
+      }
+    }
+
+    // Validate that no IDs are missing
+    if (regionIdsInOrder.regions.length !== existingRegionIds.size) {
+      throw new BadRequestError('Some region IDs are missing in the order request');
+    }
+    await RegionRepo.orderRegions(regionIdsInOrder.regions);
   }
 }
 
