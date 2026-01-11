@@ -51,6 +51,6 @@ Content-Type: application/json
 
 
 ### 
-# @name get_middleSchools
-GET {{baseUrl}}/middle-Schools/
+# @name get_all_middleSchools
+GET {{baseUrl}}/middle-Schools/all
 Content-Type: application/json

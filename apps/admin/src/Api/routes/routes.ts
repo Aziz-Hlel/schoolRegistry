@@ -54,6 +54,7 @@ const apiRoutes = {
   middleSchools: {
     create: () => '/middle-schools' as const,
     getAll: () => '/middle-schools' as const,
+    getPage: () => '/middle-schools/' as const,
     getById: (id: string) => `/middle-schools/${id}` as const,
     update: (id: string) => `/middle-schools/${id}` as const,
     delete: (id: string) => `/middle-schools/${id}` as const,

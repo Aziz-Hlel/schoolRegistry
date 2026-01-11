@@ -3,7 +3,7 @@ import { Role } from '../../generated/prisma/browser';
 import { GenericEntityCreateInput } from '../../types/prisma/GenericEntityUtilityTypes';
 import { User } from '../../generated/prisma/client';
 import { StrictDecodedIdToken } from '../../types/auth/StrictDecodedIdToken';
-import { Page } from '../../types/page/Page';
+import { Page } from '@contracts/types/page/Page';
 import { DefaultSearchParams } from '../../types/api/DefaultSeachParams';
 import { UserProfileResponse } from '@contracts/types/user/UserProfileResponse';
 import { UserRowResponse } from '@contracts/types/user/UserRowResponse';

@@ -13,11 +13,15 @@ router.put(
   asyncHandler((req: Request, res: Response) => middleSchoolController.updateMiddleSchool(req, res)),
 );
 router.get(
+  '/',
+  asyncHandler((req: Request, res: Response) => middleSchoolController.getMiddleSchoolPage(req, res)),
+);
+router.get(
   '/:id',
   asyncHandler((req: Request, res: Response) => middleSchoolController.getMiddleSchoolById(req, res)),
 );
 router.get(
-  '/',
+  '/all',
   asyncHandler((req: Request, res: Response) => middleSchoolController.getMiddleSchools(req, res)),
 );
 router.delete(

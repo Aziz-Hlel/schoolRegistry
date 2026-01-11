@@ -3,6 +3,9 @@ import { Request, Response } from 'express';
 import { middleSchoolService } from './middleSchool.service';
 import { MiddleSchoolResponse } from '@contracts/schemas/middleSchool/middleSchoolResponse';
 import { SimpleApiResponse } from '@contracts/types/api/SimpleApiResponse.dto';
+import { middleSchoolQueryParamsSchema } from '@contracts/schemas/middleSchool/MiddleSchoolPageQuery';
+import { MiddleSchoolRowResponse } from '@contracts/schemas/middleSchool/middleSchoolRowResponse';
+import { Page } from '@contracts/types/page/Page';
 
 class MiddleSchoolController {
   async createMiddleSchool(req: Request, res: Response<MiddleSchoolResponse>) {
@@ -36,6 +39,12 @@ class MiddleSchoolController {
 
     await middleSchoolService.deleteMiddleSchool(middleSchoolId);
     res.status(200).json({ message: 'Middle school deleted successfully' });
+  }
+
+  async getMiddleSchoolPage(req: Request, res: Response<Page<MiddleSchoolRowResponse>>) {
+    const queryParams = middleSchoolQueryParamsSchema.parse(req.query);
+    const response = await middleSchoolService.getPage(queryParams);
+    res.json(response);
   }
 }
 

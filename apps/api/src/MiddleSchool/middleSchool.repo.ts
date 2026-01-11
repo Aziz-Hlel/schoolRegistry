@@ -1,6 +1,6 @@
 import { prisma } from '@/bootstrap/db.init';
 import { SchoolType } from '@/generated/prisma/enums';
-import { MiddleSchoolInclude } from '@/generated/prisma/models';
+import { MiddleSchoolInclude, MiddleSchoolWhereInput } from '@/generated/prisma/models';
 import { CreateMiddleSchoolRequest } from '@contracts/schemas/middleSchool/createMiddleSchoolRequest';
 import { UpdateMiddleSchoolRequest } from '@contracts/schemas/middleSchool/updateMiddleSchoolRequest';
 import { DefaultArgs } from '@prisma/client/runtime/client';
@@ -102,6 +102,24 @@ class MiddleSchoolRepo {
       },
       include: this.includeDirectorRegion(),
     });
+  }
+
+  async getPage({ where, skip, take }: { where: MiddleSchoolWhereInput; skip: number; take: number }) {
+    const middleSchoolsPromise = prisma.middleSchool.findMany({
+      where: where,
+      skip: skip,
+      take: take,
+      include: this.includeDirectorRegion(),
+    });
+
+    const totalCountPromise = prisma.middleSchool.count({ where });
+
+    const [middleSchools, totalCount] = await Promise.all([middleSchoolsPromise, totalCountPromise]);
+
+    return {
+      middleSchools,
+      totalCount,
+    };
   }
 }
 

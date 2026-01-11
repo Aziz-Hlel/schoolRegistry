@@ -15,6 +15,7 @@ import UserPage from './pages/User';
 import Regions from './pages/Regions';
 import Majors from './pages/Majors';
 import Electives from './pages/Electives';
+import MiddleSchool from './pages/MiddleSchool';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,8 +50,11 @@ function App() {
                       <Route index path="/profile" element={<Profile />} />
                       <Route path="users/" element={<UserPage />}></Route>
                       <Route path="regions/" element={<Regions />}></Route>
+                      {/* High Schools */}
                       <Route path="high-schools/majors" element={<Majors />}></Route>
                       <Route path="high-schools/electives" element={<Electives />}></Route>
+                      {/* Middle Schools */}
+                      <Route path="middle-schools/" element={<MiddleSchool />}></Route>
                     </Route>
                   </Route>
                 </Route>

@@ -5,6 +5,10 @@ import { MiddleSchoolMapper } from './middleSchool.mapper';
 import { MiddleSchoolResponse } from '@contracts/schemas/middleSchool/middleSchoolResponse';
 import { RegionRepo } from '@/region/region.repo';
 import { UpdateMiddleSchoolRequest } from '@contracts/schemas/middleSchool/updateMiddleSchoolRequest';
+import { MiddleSchoolTableQueryParams } from '@contracts/schemas/middleSchool/MiddleSchoolPageQuery';
+import { MiddleSchoolOrderByWithRelationInput, MiddleSchoolWhereInput } from '@/generated/prisma/models';
+import { Page } from '@contracts/types/page/Page';
+import { MiddleSchoolRowResponse } from '@contracts/schemas/middleSchool/middleSchoolRowResponse';
 
 class MiddleSchoolService {
   async createMiddleSchool(schema: CreateMiddleSchoolRequest): Promise<MiddleSchoolResponse> {
@@ -76,6 +80,32 @@ class MiddleSchoolService {
       throw new NotFoundError('Middle school not found');
     }
     await middleSchoolRepo.deleteMiddleSchool(id);
+  }
+
+  async getPage(queryParams: MiddleSchoolTableQueryParams): Promise<Page<MiddleSchoolRowResponse>> {
+    const skip = (queryParams.page - 1) * queryParams.size;
+    const take = queryParams.size;
+    const { search } = queryParams;
+
+    const where: MiddleSchoolWhereInput = {};
+
+    if (search.length > 0) {
+      const searchValue = search.toLowerCase();
+      where.school = { name: { contains: searchValue, mode: 'insensitive' } };
+    }
+
+    const sort: MiddleSchoolOrderByWithRelationInput = {};
+    sort.school = { [queryParams.sort]: queryParams.order };
+
+    const { middleSchools, totalCount } = await middleSchoolRepo.getPage({ where, skip, take });
+
+    const middleSchoolPageResponse = MiddleSchoolMapper.toPageResponse({
+      middleSchools,
+      queryParams,
+      totalElements: totalCount,
+    });
+
+    return middleSchoolPageResponse;
   }
 }
 

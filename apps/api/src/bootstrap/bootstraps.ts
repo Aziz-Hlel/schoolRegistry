@@ -6,6 +6,7 @@ import { seedHighSchools } from '@/seeds/fakes/school.fake';
 import { seedRegions } from '@/seeds/fakes/regions.fake';
 import { seedElectives } from '@/seeds/fakes/electives.fake';
 import { seedMajors } from '@/seeds/fakes/majors.fake';
+import { seedMiddleSchools } from '@/seeds/fakes/middle_schools.fake';
 
 const asyncBootstrapHandlers = async () => {
   await Promise.all([
@@ -15,6 +16,7 @@ const asyncBootstrapHandlers = async () => {
     seedRegions(),
     seedMajors(),
     seedElectives(),
+    seedMiddleSchools(),
   ]);
   await seed();
 };

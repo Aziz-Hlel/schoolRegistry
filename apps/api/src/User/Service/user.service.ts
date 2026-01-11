@@ -1,7 +1,7 @@
 import { UserRowResponse } from '@contracts/types/user/UserRowResponse';
 import { UserOrderByWithRelationInput, UserWhereInput } from '../../generated/prisma/models';
 import { prisma } from '../../bootstrap/db.init';
-import { Page } from '../../types/page/Page';
+import { Page } from '@contracts/types/page/Page';
 import UserMapper from '../mapper/user.mapper';
 import { UserPageQuery } from '@contracts/types/user/UserPageQuery';
 import { cacheService } from '@/cache/service/cache.service';

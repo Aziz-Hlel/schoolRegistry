@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker';
 
 faker.seed(1); // Ensure consistent fake data across runs
 
-const fakeRegionsNames: readonly string[] = [
+export const fakeRegionsNames: readonly string[] = [
   'Sousse Ville',
   'Hammam Sousse',
   'Akouda',
@@ -31,4 +31,8 @@ export const seedRegions = async () => {
       update: {},
     });
   });
+};
+
+export const retreiveFakeRegionName = () => {
+  return faker.helpers.arrayElement(fakeRegionsNames);
 };
