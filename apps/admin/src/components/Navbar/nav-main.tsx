@@ -1,4 +1,4 @@
-import { ChevronRight, Earth, LayoutDashboard, School, Settings2, UsersRound } from 'lucide-react';
+import { ChevronRight, Earth, LayoutDashboard, School, University } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
   SidebarGroup,
@@ -45,7 +45,7 @@ const navRoutes: NavRoute[] = [
   {
     title: 'المعاهد',
     url: '/dashboard',
-    icon: School,
+    icon: University,
     isActive: true,
     items: [
       {
@@ -55,21 +55,20 @@ const navRoutes: NavRoute[] = [
       },
       {
         title: 'الشعب',
-        url: '/dashboard/stats',
-        isActive: false,
+        url: '/high-schools/majors',
+        isActive: true,
       },
       {
         title: 'المواد الاضافية',
-        url: '/dashboard/stats',
-        isActive: false,
+        url: '/high-schools/electives',
+        isActive: true,
       },
     ],
   },
-
   {
-    title: 'Users',
-    url: '/users',
-    icon: UsersRound,
+    title: 'المدارس الاعدادية',
+    url: '/middle-schools',
+    icon: School,
     isActive: true,
   },
   {
@@ -77,19 +76,6 @@ const navRoutes: NavRoute[] = [
     url: '/regions',
     icon: Earth,
     isActive: true,
-  },
-  {
-    title: 'Settings',
-    url: '/settings',
-    icon: Settings2,
-    isActive: true,
-    items: [
-      {
-        title: 'Profile',
-        url: '/settings/profile',
-        isActive: true,
-      },
-    ],
   },
 ];
 

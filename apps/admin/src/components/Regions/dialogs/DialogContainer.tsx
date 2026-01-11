@@ -5,14 +5,14 @@ import EditDialog from './EditDialog';
 import OrderRegions from '../OrderRegions/OrderRegions';
 
 const DialogContainer = () => {
-  return (
-    <>
-      <CreateDialog />
-      <EditDialog />
-      <DeleteRegion />
-      <OrderRegions />
-    </>
-  );
+  const { openDialog } = useSelectedRow();
+
+  if (openDialog === 'add') return <CreateDialog />;
+  if (openDialog === 'edit') return <EditDialog />;
+  if (openDialog === 'delete') return <DeleteRegion />;
+  if (openDialog === 'order') return <OrderRegions />;
+
+  return null;
 };
 
 export default DialogContainer;

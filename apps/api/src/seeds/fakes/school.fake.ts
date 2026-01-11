@@ -26,6 +26,16 @@ const fakeRegions = fakeRegionsNames.map((regionName, index) => ({
   sortOrder: index,
 }));
 
+const seedRegions = async () => {
+  fakeRegions.forEach(async (region) => {
+    await prisma.region.upsert({
+      where: { name: region.name },
+      create: region,
+      update: {},
+    });
+  });
+};
+
 const fakeDirector = () => ({
   id: faker.string.uuid(),
   name: faker.person.fullName(),
@@ -90,16 +100,6 @@ const createFakeHighSchools: () => HighSchoolCreateInput = () => {
       },
     },
   };
-};
-
-export const seedRegions = async () => {
-  fakeRegions.forEach(async (region) => {
-    await prisma.region.upsert({
-      where: { name: region.name },
-      create: region,
-      update: {},
-    });
-  });
 };
 
 export const seedHighSchools = async () => {

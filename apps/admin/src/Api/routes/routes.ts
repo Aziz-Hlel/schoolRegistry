@@ -34,6 +34,7 @@ const apiRoutes = {
     getById: (id: string) => `/majors/${id}` as const,
     update: (id: string) => `/majors/${id}` as const,
     delete: (id: string) => `/majors/${id}` as const,
+    order: () => `/majors/order` as const,
   },
 
   electives: {
@@ -42,6 +43,7 @@ const apiRoutes = {
     getById: (id: string) => `/electives/${id}` as const,
     update: (id: string) => `/electives/${id}` as const,
     delete: (id: string) => `/electives/${id}` as const,
+    order: () => `/electives/order` as const,
   },
 
   directors: {

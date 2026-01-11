@@ -5,13 +5,25 @@ import { CurriculumComponentKind } from '@contracts/types/enums/enums';
 
 class MajorRepo {
   async isMajorNameTaken(name: string): Promise<boolean> {
-    const major = await prisma.curriculumComponent.count({
+    const major = await prisma.curriculumComponent.findUnique({
       where: {
-        name: name,
-        kind: CurriculumComponentKind.MAJOR,
+        name_kind: {
+          name: name,
+          kind: CurriculumComponentKind.MAJOR,
+        },
       },
     });
-    return major !== null;
+    return !!major;
+  }
+
+  async getNewMajorSortOrder() {
+    const major = await prisma.curriculumComponent.findFirst({
+      where: {
+        kind: CurriculumComponentKind.MAJOR,
+      },
+      orderBy: { sortOrder: 'desc' },
+    });
+    return major ? major.sortOrder + 1 : 0;
   }
 
   async getMajorById(id: string) {
@@ -23,11 +35,12 @@ class MajorRepo {
     });
   }
 
-  async createMajor(parsedSchema: CreateMajorRequest) {
+  async createMajor(parsedSchema: CreateMajorRequest, newMajorSortOrder: number) {
     return await prisma.curriculumComponent.create({
       data: {
         ...parsedSchema,
         kind: CurriculumComponentKind.MAJOR,
+        sortOrder: newMajorSortOrder,
       },
     });
   }
@@ -42,9 +55,40 @@ class MajorRepo {
     });
   }
 
+  async getAll() {
+    return await prisma.curriculumComponent.findMany({
+      where: {
+        kind: CurriculumComponentKind.MAJOR,
+      },
+      orderBy: {
+        sortOrder: 'asc',
+      },
+    });
+  }
+
   async deleteMajor(id: string): Promise<void> {
     await prisma.curriculumComponent.delete({
       where: { id, kind: CurriculumComponentKind.MAJOR },
+    });
+  }
+
+  async orderMajors(majorIdsInOrder: string[]) {
+    await prisma.$transaction(async (tx) => {
+      // Phase 1: move everything out of the way
+      await tx.curriculumComponent.updateMany({
+        where: { kind: CurriculumComponentKind.MAJOR },
+        data: {
+          sortOrder: { increment: 1000 },
+        },
+      });
+
+      // Phase 2: apply correct order
+      for (let i = 0; i < majorIdsInOrder.length; i++) {
+        await tx.curriculumComponent.update({
+          where: { id: majorIdsInOrder[i] },
+          data: { sortOrder: i },
+        });
+      }
     });
   }
 }

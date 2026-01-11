@@ -1,10 +1,10 @@
-import { SelectedRowProvider } from '@/components/Regions/Regions.context';
+import { SelectedRegionRowProvider } from '@/components/Regions/Regions.context';
 import RegionsIndex from '@/components/Regions/Regions.index';
 
 const Regions = () => (
-  <SelectedRowProvider>
+  <SelectedRegionRowProvider>
     <RegionsIndex />
-  </SelectedRowProvider>
+  </SelectedRegionRowProvider>
 );
 
 export default Regions;

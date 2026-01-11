@@ -8,6 +8,10 @@ router.post(
   '/',
   asyncHandler((req: Request, res: Response) => electiveController.createOptionalSubject(req, res)),
 );
+router.post(
+  '/order',
+  asyncHandler((req: Request, res: Response) => electiveController.orderElectives(req, res)),
+);
 router.put(
   '/:id',
   asyncHandler((req: Request, res: Response) => electiveController.updateOptionalSubject(req, res)),

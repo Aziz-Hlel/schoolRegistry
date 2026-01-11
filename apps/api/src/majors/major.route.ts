@@ -8,6 +8,10 @@ router.post(
   '/',
   asyncHandler((req: Request, res: Response) => majorController.createMajor(req, res)),
 );
+router.post(
+  '/order',
+  asyncHandler((req: Request, res: Response) => majorController.orderMajors(req, res)),
+);
 router.put(
   '/:id',
   asyncHandler((req: Request, res: Response) => majorController.updateMajor(req, res)),

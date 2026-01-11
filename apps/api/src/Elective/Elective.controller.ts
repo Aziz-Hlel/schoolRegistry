@@ -4,6 +4,7 @@ import { electiveService } from './Elective.service';
 import { updateElectiveRequestSchema } from '@contracts/schemas/elective/updateElectiveRequest';
 import { ElectiveResponse } from '@contracts/schemas/elective/ElectiveResponse';
 import { SimpleApiResponse } from '@contracts/types/api/SimpleApiResponse.dto';
+import { orderElectiveRequestSchema } from '@contracts/schemas/elective/orderElectiveRequest';
 
 class ElectiveController {
   async createOptionalSubject(req: Request, res: Response<ElectiveResponse>) {
@@ -40,6 +41,12 @@ class ElectiveController {
     await electiveService.deleteOptionalSubject(optionalSubjectId);
 
     res.status(200).json({ message: 'Optional Subject deleted successfully' });
+  }
+
+  async orderElectives(req: Request, res: Response<SimpleApiResponse>) {
+    const parsedBody = orderElectiveRequestSchema.parse(req.body);
+    await electiveService.orderElectives(parsedBody.electives);
+    res.status(200).json({ message: 'Electives ordered successfully' });
   }
 }
 

@@ -14,7 +14,10 @@ class ElectiveService {
     if (isOptionalSubjectNameTaken) {
       throw new BadRequestError('Optional Subject name is already taken');
     }
-    const newOptionalSubject = await electiveRepo.createOptionalSubject(optionalSubject);
+
+    const sortOrder = await electiveRepo.getNewElectiveSortOrder();
+
+    const newOptionalSubject = await electiveRepo.create(optionalSubject, sortOrder);
 
     const optionalSubjectResponse = ElectiveMapper.toResponse(newOptionalSubject);
 
@@ -22,13 +25,13 @@ class ElectiveService {
   }
 
   async updateOptionalSubject(id: string, schema: UpdateElectiveRequest): Promise<ElectiveResponse> {
-    const optionalSubjectRecord = await electiveRepo.getOptionalSubjectById(id);
+    const optionalSubjectRecord = await electiveRepo.getById(id);
 
     if (!optionalSubjectRecord) {
       throw new NotFoundError('Optional Subject id not found');
     }
 
-    const updatedOptionalSubject = await electiveRepo.updateOptionalSubject(id, schema);
+    const updatedOptionalSubject = await electiveRepo.update(id, schema);
 
     const optionalSubjectResponse = ElectiveMapper.toResponse(updatedOptionalSubject);
 
@@ -36,7 +39,7 @@ class ElectiveService {
   }
 
   async getOptionalSubjectById(id: string): Promise<ElectiveResponse> {
-    const optionalSubjectRecord = await electiveRepo.getOptionalSubjectById(id);
+    const optionalSubjectRecord = await electiveRepo.getById(id);
 
     if (!optionalSubjectRecord) {
       throw new NotFoundError('Optional Subject id not found');
@@ -48,7 +51,7 @@ class ElectiveService {
   }
 
   async getAllOptionalSubjects(): Promise<ElectiveResponse[]> {
-    const optionalSubjects = await electiveRepo.getAllOptionalSubjects();
+    const optionalSubjects = await electiveRepo.getAll();
 
     const optionalSubjectResponses = ElectiveMapper.toResponses(optionalSubjects);
 
@@ -56,13 +59,29 @@ class ElectiveService {
   }
 
   async deleteOptionalSubject(id: string): Promise<void> {
-    const optionalSubjectRecord = await electiveRepo.getOptionalSubjectById(id);
+    const optionalSubjectRecord = await electiveRepo.getById(id);
 
     if (!optionalSubjectRecord) {
       throw new NotFoundError('Optional Subject id not found');
     }
 
     await electiveRepo.deleteOptionalSubject(id);
+  }
+
+  async orderElectives(electiveIdsInOrder: string[]): Promise<void> {
+    const existingElectives = await electiveRepo.getAll();
+    const existingElectiveIds = new Set(existingElectives.map((elective) => elective.id));
+
+    const invalidIds = electiveIdsInOrder.filter((id) => !existingElectiveIds.has(id));
+    if (invalidIds.length > 0) {
+      throw new BadRequestError(`Elective IDs not found : ${invalidIds.join(', ')}`);
+    }
+
+    if (new Set(electiveIdsInOrder).size !== electiveIdsInOrder.length) {
+      throw new BadRequestError('Duplicate Elective IDs found in the order request');
+    }
+
+    await electiveRepo.orderElectives(electiveIdsInOrder);
   }
 }
 

@@ -10,9 +10,12 @@ class RegionRepoClass {
     return !!region;
   }
 
-  async getRegionById(regionId: string) {
+  async getRegionById(regionId: string, include?: { schools?: boolean }) {
     const region = await prisma.region.findUnique({
       where: { id: regionId },
+      include: {
+        schools: include?.schools ?? false,
+      },
     });
     return region;
   }

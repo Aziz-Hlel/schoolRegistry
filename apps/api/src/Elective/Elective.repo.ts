@@ -5,26 +5,39 @@ import { CurriculumComponentKind } from '@contracts/types/enums/enums';
 
 class ElectiveRepo {
   async isElectiveNameTaken(name: string): Promise<boolean> {
-    const optionalSubject = await prisma.curriculumComponent.count({
+    const optionalSubject = await prisma.curriculumComponent.findUnique({
       where: {
-        name: name,
-        kind: CurriculumComponentKind.ELECTIVE,
+        name_kind: {
+          name: name,
+          kind: CurriculumComponentKind.ELECTIVE,
+        },
       },
     });
-    return optionalSubject !== null;
+    return !!optionalSubject;
   }
 
-  async createOptionalSubject(schema: CreateElectiveRequest): Promise<CurriculumComponent> {
+  async getNewElectiveSortOrder() {
+    const optionalSubject = await prisma.curriculumComponent.findFirst({
+      where: {
+        kind: CurriculumComponentKind.ELECTIVE,
+      },
+      orderBy: { sortOrder: 'desc' },
+    });
+    return optionalSubject ? optionalSubject.sortOrder + 1 : 0;
+  }
+
+  async create(schema: CreateElectiveRequest, newElectiveSortOrder: number): Promise<CurriculumComponent> {
     const newOptionalSubject = await prisma.curriculumComponent.create({
       data: {
         ...schema,
         kind: CurriculumComponentKind.ELECTIVE,
+        sortOrder: newElectiveSortOrder,
       },
     });
     return newOptionalSubject;
   }
 
-  async updateOptionalSubject(id: string, schema: CreateElectiveRequest): Promise<CurriculumComponent> {
+  async update(id: string, schema: CreateElectiveRequest): Promise<CurriculumComponent> {
     const updatedOptionalSubject = await prisma.curriculumComponent.update({
       where: {
         id: id,
@@ -36,7 +49,7 @@ class ElectiveRepo {
     });
     return updatedOptionalSubject;
   }
-  async getOptionalSubjectById(id: string) {
+  async getById(id: string) {
     const optionalSubject = await prisma.curriculumComponent.findUnique({
       where: {
         id: id,
@@ -46,10 +59,13 @@ class ElectiveRepo {
     return optionalSubject;
   }
 
-  async getAllOptionalSubjects(): Promise<CurriculumComponent[]> {
+  async getAll(): Promise<CurriculumComponent[]> {
     const optionalSubjects = await prisma.curriculumComponent.findMany({
       where: {
         kind: CurriculumComponentKind.ELECTIVE,
+      },
+      orderBy: {
+        sortOrder: 'asc',
       },
     });
     return optionalSubjects;
@@ -60,6 +76,26 @@ class ElectiveRepo {
       where: {
         id: id,
       },
+    });
+  }
+
+  async orderElectives(electivesInOrder: string[]) {
+    await prisma.$transaction(async (tx) => {
+      // Phase 1: move everything out of the way
+      await tx.curriculumComponent.updateMany({
+        where: { kind: CurriculumComponentKind.ELECTIVE },
+        data: {
+          sortOrder: { increment: 1000 },
+        },
+      });
+
+      // Phase 2: apply correct order
+      for (let i = 0; i < electivesInOrder.length; i++) {
+        await tx.curriculumComponent.update({
+          where: { id: electivesInOrder[i] },
+          data: { sortOrder: i },
+        });
+      }
     });
   }
 }

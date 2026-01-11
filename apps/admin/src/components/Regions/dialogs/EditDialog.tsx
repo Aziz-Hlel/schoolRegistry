@@ -24,10 +24,11 @@ const EditDialog = () => {
   const { handleCancel, currentRow, openDialog } = useSelectedRow();
   const queryClient = useQueryClient();
 
+  console.log('currentRow rab name : ', currentRow?.name);
   const form = useForm<UpdateRegionRequest>({
     resolver: zodResolver(updateRegionRequestSchema),
     defaultValues: {
-      name: currentRow?.name || '',
+      name: currentRow?.name,
     },
   });
 
@@ -39,10 +40,11 @@ const EditDialog = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['regions'], exact: false });
       toast.success('Region updated successfully.');
+      form.reset();
       handleCancel();
     },
     onError: () => {
-      toast.error('Failed to create region. Please try again.');
+      toast.error('Failed to update region. Please try again.');
     },
   });
 
@@ -52,6 +54,7 @@ const EditDialog = () => {
 
   const onOpenChange = (open: boolean) => {
     if (!open) {
+      form.reset();
       handleCancel();
     }
   };
@@ -59,7 +62,7 @@ const EditDialog = () => {
   console.log('erors : ', form.formState.errors);
   return (
     <Dialog onOpenChange={onOpenChange} open={openDialog === 'edit'}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <DialogHeader>
             <DialogTitle>Update Region</DialogTitle>
@@ -85,7 +88,7 @@ const EditDialog = () => {
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit">{isPending ? <Spinner /> : <span>Save changes</span>}</Button>
+            <Button type="submit">{isPending ? <Spinner /> : <span>Update</span>}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

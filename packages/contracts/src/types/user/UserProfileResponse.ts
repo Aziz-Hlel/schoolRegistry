@@ -11,5 +11,5 @@ export type UserProfileResponse = {
   role: Role;
   isEmailVerified: boolean;
   status: Status;
-  avatar?: string;
+  avatar: string | null;
 };

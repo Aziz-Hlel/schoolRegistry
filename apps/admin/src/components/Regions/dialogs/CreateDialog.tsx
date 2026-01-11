@@ -8,7 +8,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -55,10 +54,9 @@ const CreateDialog = () => {
     }
   };
 
-  console.log('erors : ', form.formState.errors);
   return (
     <Dialog onOpenChange={onOpenChange} open={openDialog === 'add'}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <DialogHeader>
             <DialogTitle>Create Region</DialogTitle>

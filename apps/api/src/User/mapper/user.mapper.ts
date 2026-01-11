@@ -33,8 +33,9 @@ const UserMapper = {
       status: user.status,
       role: user.role,
       isEmailVerified: user.isEmailVerified,
-      avatar: firebaseToken.picture || null,
+      avatar: firebaseToken.picture ?? null,
       createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     };
     return userResponse;
   },

@@ -68,12 +68,15 @@ class RegionService {
   }
 
   async deleteRegion(regionId: string): Promise<void> {
-    const schoolCountAssociatedWithRegion = await prisma.school.count({
-      where: { regionId: regionId },
-    });
+    const region = await RegionRepo.getRegionById(regionId, { schools: true });
 
-    if (schoolCountAssociatedWithRegion > 0) {
-      throw new BadRequestError('Cannot delete region with associated schools');
+    if (!region) {
+      throw new NotFoundError('Region id not found');
+    }
+
+    const isSchoolAssociatedWithRegion = region.schools && region.schools.length > 0;
+    if (isSchoolAssociatedWithRegion) {
+      throw new BadRequestError('Cannot delete region with schools associated to it');
     }
 
     await prisma.region.delete({

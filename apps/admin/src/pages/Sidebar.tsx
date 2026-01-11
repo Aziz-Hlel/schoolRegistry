@@ -1,10 +1,14 @@
 import { AppSidebar } from '@/components/Navbar/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { useElectives } from '@/hooks/use-electives';
+import { useMajors } from '@/hooks/use-majors';
 import { useRegions } from '@/hooks/use-regions';
 import { Outlet } from 'react-router-dom';
 
 const Sidebar = ({ dir }: { dir: 'rtl' | 'ltr' }) => {
   useRegions();
+  useMajors();
+  useElectives();
   return (
     <div className="flex h-screen fixed inset-0 overflow-y-hidden ">
       <SidebarProvider dir={dir}>

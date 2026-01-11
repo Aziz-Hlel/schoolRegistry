@@ -13,7 +13,7 @@ type SelectedRowContextType = {
 
 const SelectedRowContext = createContext<SelectedRowContextType | null>(null);
 
-export function SelectedRowProvider({ children }: { children: React.ReactNode }) {
+export function SelectedRegionRowProvider({ children }: { children: React.ReactNode }) {
   const [openDialog, setOpenDialog] = useState<TableDialogType>(null);
   const [currentRow, setCurrentRow] = useState<RegionResponse | null>(null);
 

@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { majorService } from './major.service';
 import { updateMajorRequestSchema } from '@contracts/schemas/major/updateMajorRequest';
 import { SimpleApiResponse } from '@contracts/types/api/SimpleApiResponse.dto';
+import { orderMajorRequestSchema } from '@contracts/schemas/major/orderMajorRequest';
 
 class MajorController {
   async createMajor(req: Request, res: Response<MajorResponse>) {
@@ -30,7 +31,7 @@ class MajorController {
   }
 
   async getMajors(req: Request, res: Response<MajorResponse[]>) {
-    const majors = await majorService.getAllMajors();
+    const majors = await majorService.getAll();
 
     res.status(200).json(majors);
   }
@@ -40,6 +41,14 @@ class MajorController {
     await majorService.deleteMajor(majorId);
 
     res.status(200).json({ message: 'Major deleted successfully' });
+  }
+
+  async orderMajors(req: Request, res: Response<SimpleApiResponse>) {
+    const parsedBody = orderMajorRequestSchema.parse(req.body);
+
+    await majorService.orderMajors(parsedBody.majors);
+
+    res.status(200).json({ message: 'Majors ordered successfully' });
   }
 }
 

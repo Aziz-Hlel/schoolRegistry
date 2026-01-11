@@ -13,6 +13,8 @@ import Sidebar from './pages/Sidebar';
 import { UserSessionProvider } from './context/UserConext';
 import UserPage from './pages/User';
 import Regions from './pages/Regions';
+import Majors from './pages/Majors';
+import Electives from './pages/Electives';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,9 +47,10 @@ function App() {
                     <Route element={<Sidebar dir={dir} />}>
                       <Route path="/" element={<Home />} />
                       <Route index path="/profile" element={<Profile />} />
-
                       <Route path="users/" element={<UserPage />}></Route>
                       <Route path="regions/" element={<Regions />}></Route>
+                      <Route path="high-schools/majors" element={<Majors />}></Route>
+                      <Route path="high-schools/electives" element={<Electives />}></Route>
                     </Route>
                   </Route>
                 </Route>

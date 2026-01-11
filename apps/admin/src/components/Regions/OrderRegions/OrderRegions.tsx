@@ -70,7 +70,7 @@ const OrderRegions = () => {
   };
   return (
     <Dialog onOpenChange={onOpenChange} open={openDialog === 'order'}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>Create Region</DialogTitle>
           <DialogDescription>Fill the form below to create a new region.</DialogDescription>

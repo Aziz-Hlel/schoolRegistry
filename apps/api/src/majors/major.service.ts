@@ -17,7 +17,8 @@ class MajorService {
       throw new BadRequestError('Major name is already taken');
     }
 
-    const createdMajor = await majorRepo.createMajor(major);
+    const newMajorSortOrder = await majorRepo.getNewMajorSortOrder();
+    const createdMajor = await majorRepo.createMajor(major, newMajorSortOrder);
 
     const majorResponse = MajorMapper.toMajorResponse(createdMajor);
 
@@ -42,12 +43,8 @@ class MajorService {
     return majorResponse;
   }
 
-  async getAllMajors(): Promise<MajorResponse[]> {
-    const majors = await prisma.curriculumComponent.findMany({
-      where: {
-        kind: CurriculumComponentKind.MAJOR,
-      },
-    });
+  async getAll(): Promise<MajorResponse[]> {
+    const majors = await majorRepo.getAll();
     return MajorMapper.toMajorResponses(majors);
   }
 
@@ -58,6 +55,22 @@ class MajorService {
     }
 
     await majorRepo.deleteMajor(id);
+  }
+
+  async orderMajors(majorIdsInOrder: string[]): Promise<void> {
+    const existingMajors = await majorRepo.getAll();
+    const existingMajorIds = new Set(existingMajors.map((major) => major.id));
+
+    const invalidIds = majorIdsInOrder.filter((id) => !existingMajorIds.has(id));
+    if (invalidIds.length > 0) {
+      throw new BadRequestError(`Major IDs not found : ${invalidIds.join(', ')}`);
+    }
+
+    if (new Set(majorIdsInOrder).size !== majorIdsInOrder.length) {
+      throw new BadRequestError('Duplicate Major IDs found in the order request');
+    }
+
+    await majorRepo.orderMajors(majorIdsInOrder);
   }
 }
 export const majorService = new MajorService();

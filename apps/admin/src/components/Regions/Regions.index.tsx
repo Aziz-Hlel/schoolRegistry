@@ -1,9 +1,8 @@
 import BreadcrumbHeader from '@/pages/Header';
 import { Button } from '../ui/button';
 import RegionsMain from './RegionRows';
-import { Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter } from '../ui/card';
-import { SelectedRowProvider, useSelectedRow } from './Regions.context';
-import { use } from 'react';
+import { Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent } from '../ui/card';
+import { useSelectedRow } from './Regions.context';
 import DialogContainer from './dialogs/DialogContainer';
 
 const RegionsIndex = () => {
