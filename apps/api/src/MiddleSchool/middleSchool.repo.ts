@@ -52,7 +52,7 @@ class MiddleSchoolRepo {
             type: SchoolType.MIDDLE,
             regionId: schema.regionId,
             director: {
-              create: schema.director,
+              ...(schema.director && { create: schema.director }),
             },
           },
         },
