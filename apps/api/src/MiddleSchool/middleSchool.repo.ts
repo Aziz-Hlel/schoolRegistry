@@ -1,6 +1,10 @@
 import { prisma } from '@/bootstrap/db.init';
 import { SchoolType } from '@/generated/prisma/enums';
-import { MiddleSchoolInclude, MiddleSchoolWhereInput } from '@/generated/prisma/models';
+import {
+  MiddleSchoolInclude,
+  MiddleSchoolOrderByWithRelationInput,
+  MiddleSchoolWhereInput,
+} from '@/generated/prisma/models';
 import { CreateMiddleSchoolRequest } from '@contracts/schemas/middleSchool/createMiddleSchoolRequest';
 import { UpdateMiddleSchoolRequest } from '@contracts/schemas/middleSchool/updateMiddleSchoolRequest';
 import { DefaultArgs } from '@prisma/client/runtime/client';
@@ -104,11 +108,22 @@ class MiddleSchoolRepo {
     });
   }
 
-  async getPage({ where, skip, take }: { where: MiddleSchoolWhereInput; skip: number; take: number }) {
+  async getPage({
+    where,
+    skip,
+    take,
+    sort,
+  }: {
+    where: MiddleSchoolWhereInput;
+    skip: number;
+    take: number;
+    sort: MiddleSchoolOrderByWithRelationInput;
+  }) {
     const middleSchoolsPromise = prisma.middleSchool.findMany({
       where: where,
       skip: skip,
       take: take,
+      orderBy: sort,
       include: this.includeDirectorRegion(),
     });
 

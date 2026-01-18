@@ -14,9 +14,9 @@ export const middleSchoolSortableColumnKeys: MiddleSchoolTableRowKeys[] = [
   'director',
   'isPublic',
   'region',
+  'staffCount',
   'createdAt',
   'updatedAt',
-  'staffCount',
 ] as const;
 
 const csvEnumArray = <T extends string[]>(values: T) =>
@@ -34,13 +34,13 @@ const csvEnumArray = <T extends string[]>(values: T) =>
 const csvBooleanArray = <T extends boolean[]>(values: T) =>
   z
     .string()
-    .transform((value) =>
-      value
+    .transform((value) => {
+      if (!value || value.length === 0) return [];
+      return value
         .split(',')
         .map((v) => v.trim().toLowerCase() === 'true')
-        .filter(Boolean)
-        .sort(),
-    )
+        .sort();
+    })
     .pipe(z.array(z.boolean()));
 
 export const middleSchoolQueryParamsSchema = z.object({

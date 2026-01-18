@@ -1,4 +1,4 @@
-import { CircleMinus, EllipsisVertical, Trash2, UserPen } from 'lucide-react';
+import { CircleMinus, EllipsisVertical, Trash2, Pencil } from 'lucide-react';
 
 import React, { Fragment } from 'react';
 import type { TableRowType } from '../tableDeclarations/typesAndFieldsDeclaration';
@@ -46,8 +46,8 @@ const ActionsColumn = ({ row }: { row: Row<TableRowType> }) => {
   const actions: RowAction[] = [
     {
       key: 'edit',
-      label: 'Edit',
-      icon: <UserPen size={16} className="text-green-500" />,
+      label: 'تعديل',
+      icon: <Pencil size={16} className="text-green-500" />,
       isVisible: true,
 
       onClick: () => {
@@ -57,7 +57,7 @@ const ActionsColumn = ({ row }: { row: Row<TableRowType> }) => {
     },
     {
       key: 'delete',
-      label: 'Delete',
+      label: 'حذف',
       icon: <Trash2 size={16} className="text-red-500" />,
       isVisible: true,
       onClick: () => {

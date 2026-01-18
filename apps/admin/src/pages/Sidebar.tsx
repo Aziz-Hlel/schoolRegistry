@@ -11,8 +11,8 @@ const Sidebar = ({ dir }: { dir: 'rtl' | 'ltr' }) => {
   useElectives();
   return (
     <div className="flex h-screen fixed inset-0 overflow-y-hidden ">
-      <SidebarProvider dir={dir}>
-        <AppSidebar dir={dir} side={dir === 'rtl' ? 'right' : 'left'} />
+      <SidebarProvider dir={dir} defaultOpen={false}>
+        <AppSidebar dir={dir} side={dir === 'rtl' ? 'right' : 'left'} collapsible="icon" />
 
         <SidebarInset>
           {/* <div className="flex flex-1 flex-col gap-4 p-4 pt-0">

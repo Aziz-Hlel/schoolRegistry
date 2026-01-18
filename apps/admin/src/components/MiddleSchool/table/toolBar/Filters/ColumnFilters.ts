@@ -13,10 +13,10 @@ export type ColumnFilter<T extends keyof TableRowType> = {
 
 const statusFilterData: ColumnFilter<'isPublic'> = {
   columnId: 'isPublic',
-  title: 'Status',
+  title: 'نوع المدرسة',
   options: Object.keys(isPublicTextMapping).map((key) => ({
     label: isPublicTextMapping[key as keyof typeof isPublicTextMapping],
-    value: Boolean(key as keyof typeof isPublicTextMapping),
+    value: key === 'true',
   })),
 };
 

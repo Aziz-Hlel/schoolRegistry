@@ -1,18 +1,13 @@
 import { useSelectedRow } from '../context/selected-row-provider';
 import AddMiddleSchool from './AddMiddleSchool';
-// import AddProduct from './AddProduct';
-// import DeleteUser from './DeleteUser';
-// import DisableUser from './DisableUser';
-// import EditUser from './EditUser';
-// import EnableUser from './EnableUser';
+import DeleteMiddleSchool from './DeleteMiddleSchool';
+import EditMiddleSchool from './EditMiddleSchool';
 
 const DialogContainer = () => {
   const { openDialog } = useSelectedRow();
   if (openDialog === 'add') return <AddMiddleSchool />;
-  // if (openDialog === 'delete') return <DeleteUser />;
-  // if (openDialog === 'disable') return <DisableUser />;
-  // if (openDialog === 'edit') return <EditUser />;
-  // if (openDialog === 'enable') return <EnableUser />;
+  if (openDialog === 'delete') return <DeleteMiddleSchool />;
+  if (openDialog === 'edit') return <EditMiddleSchool />;
   return null;
 };
 

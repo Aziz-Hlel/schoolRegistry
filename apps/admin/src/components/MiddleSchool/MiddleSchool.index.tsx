@@ -1,5 +1,5 @@
 import BreadcrumbHeader from '@/pages/Header';
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import MiddleSchoolsTable from './MiddleSchoolTable';
 import { useSelectedRow } from './context/selected-row-provider';
@@ -10,23 +10,20 @@ const MiddleSchoolIndex = () => {
 
   return (
     <div>
-      <BreadcrumbHeader breadcrumbs={[{ title: 'Products', href: '/products' }]} />
+      <BreadcrumbHeader breadcrumbs={[{ title: 'المدارس الاعدادية', href: '/middle-schools' }]} />
       <div className=" w-full mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>Middle School List</CardTitle>
-            <CardDescription>Manage your middle schools and their details here.</CardDescription>
+            <CardTitle>قائمة المدارس الاعدادية</CardTitle>
+            <CardDescription>إدارة المدارس الاعدادية وتفاصيلها هنا.</CardDescription>
             <CardAction>
-              <Button onClick={() => handleDialogChange('add')}>Add New Middle School</Button>
+              <Button onClick={() => handleDialogChange('add')}>إضافة مدرسة اعدادية جديدة</Button>
             </CardAction>
           </CardHeader>
           <CardContent>
             <MiddleSchoolsTable />
             <DialogContainer />
           </CardContent>
-          <CardFooter>
-            <p>Card Footer</p>
-          </CardFooter>
         </Card>
       </div>
     </div>

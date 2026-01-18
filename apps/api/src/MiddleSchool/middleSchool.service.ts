@@ -6,9 +6,15 @@ import { MiddleSchoolResponse } from '@contracts/schemas/middleSchool/middleScho
 import { RegionRepo } from '@/region/region.repo';
 import { UpdateMiddleSchoolRequest } from '@contracts/schemas/middleSchool/updateMiddleSchoolRequest';
 import { MiddleSchoolTableQueryParams } from '@contracts/schemas/middleSchool/MiddleSchoolPageQuery';
-import { MiddleSchoolOrderByWithRelationInput, MiddleSchoolWhereInput } from '@/generated/prisma/models';
+import {
+  MiddleSchoolOrderByWithRelationInput,
+  MiddleSchoolWhereInput,
+  SchoolScalarRelationFilter,
+  SchoolWhereInput,
+} from '@/generated/prisma/models';
 import { Page } from '@contracts/types/page/Page';
 import { MiddleSchoolRowResponse } from '@contracts/schemas/middleSchool/middleSchoolRowResponse';
+import { XOR } from '@/generated/prisma/internal/prismaNamespace';
 
 class MiddleSchoolService {
   async createMiddleSchool(schema: CreateMiddleSchoolRequest): Promise<MiddleSchoolResponse> {
@@ -86,18 +92,36 @@ class MiddleSchoolService {
     const skip = (queryParams.page - 1) * queryParams.size;
     const take = queryParams.size;
     const { search } = queryParams;
-
-    const where: MiddleSchoolWhereInput = {};
+    console.log('query', queryParams);
+    let where: MiddleSchoolWhereInput = { school: {} };
 
     if (search.length > 0) {
       const searchValue = search.toLowerCase();
       where.school = { name: { contains: searchValue, mode: 'insensitive' } };
     }
 
-    const sort: MiddleSchoolOrderByWithRelationInput = {};
-    sort.school = { [queryParams.sort]: queryParams.order };
+    const filterByIsPublic = queryParams.isPublic.length === 1;
+    console.log('t5l');
+    if (filterByIsPublic) {
+      where.school = {
+        AND: [{ isPublic: queryParams.isPublic[0] }],
+      };
+    }
 
-    const { middleSchools, totalCount } = await middleSchoolRepo.getPage({ where, skip, take });
+    const sort: MiddleSchoolOrderByWithRelationInput = { school: { region: { sortOrder: 'asc' } } };
+    switch (queryParams.sort) {
+      case 'region':
+        sort.school = { region: { sortOrder: queryParams.order } };
+        break;
+      case 'director':
+        sort.school = { director: { name: queryParams.order } };
+        break;
+      default:
+        sort.school = { [queryParams.sort]: queryParams.order };
+        break;
+    }
+
+    const { middleSchools, totalCount } = await middleSchoolRepo.getPage({ where, skip, take, sort });
 
     const middleSchoolPageResponse = MiddleSchoolMapper.toPageResponse({
       middleSchools,

@@ -1,7 +1,6 @@
 import { useSelectedRow } from '../context/selected-row-provider';
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -10,29 +9,30 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import userService from '@/Api/service/userService';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { apiService } from '@/Api/apiService';
+import apiRoutes from '@/Api/routes/routes';
 
-const DeleteUser = () => {
+const DeleteMiddleSchool = () => {
   const { handleCancel, openDialog, currentRow } = useSelectedRow();
   const queryClient = useQueryClient();
 
   const { mutateAsync } = useMutation({
-    mutationKey: ['users', 'delete'],
-    mutationFn: userService.deleteUserProfile,
+    mutationKey: ['middleSchools', 'delete'],
+    mutationFn: (middleSchoolId: string) => apiService.deleteThrowable(apiRoutes.middleSchools.delete(middleSchoolId)),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'], exact: false });
-      toast.success('User deleted successfully');
+      queryClient.invalidateQueries({ queryKey: ['middleSchools'], exact: false });
+      toast.success('Middle school deleted successfully');
       handleCancel();
     },
   });
 
-  const deleteUser = async () => {
+  const deleteMiddleSchool = async () => {
     try {
       await mutateAsync(currentRow?.id!);
     } catch (error) {
-      toast.error('Failed to delete user');
+      toast.error('Failed to delete middle school. Please try again.');
       handleCancel();
     }
   };
@@ -42,16 +42,17 @@ const DeleteUser = () => {
       <AlertDialog open={dialogOpen} onOpenChange={handleCancel}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>هل أنت متأكد تمامًا؟</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the user {currentRow?.username} and remove
-              their data from our servers.
+              هذا الإجراء لا يمكن التراجع عنه. سيؤدي ذلك إلى حذف المدرسة المتوسطة
+              <strong>{currentRow?.name}</strong>
+              بشكل دائم وإزالة بياناتها من خوادمنا.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
-            <Button onClick={deleteUser} className=" bg-red-600 hover:bg-red-500">
-              Delete
+            <AlertDialogCancel onClick={handleCancel}>إلغاء</AlertDialogCancel>
+            <Button onClick={deleteMiddleSchool} className=" bg-red-600 hover:bg-red-500">
+              حذف
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -60,4 +61,4 @@ const DeleteUser = () => {
   );
 };
 
-export default DeleteUser;
+export default DeleteMiddleSchool;

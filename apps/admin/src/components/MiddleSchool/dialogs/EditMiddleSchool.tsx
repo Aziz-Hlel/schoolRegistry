@@ -2,6 +2,7 @@ import { useSelectedRow } from '../context/selected-row-provider';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogClose,
@@ -11,35 +12,40 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { toast } from 'sonner';
+import { Spinner } from '@/components/ui/spinner';
+import { Separator } from '@/components/ui/separator';
 import {
-  createMiddleSchoolRequestSchema,
-  type CreateMiddleSchoolRequest,
-} from '@contracts/schemas/middleSchool/createMiddleSchoolRequest';
+  updateMiddleSchoolRequestSchema,
+  type UpdateMiddleSchoolRequest,
+} from '@contracts/schemas/middleSchool/updateMiddleSchoolRequest';
 import { apiService } from '@/Api/apiService';
 import apiRoutes from '@/Api/routes/routes';
+import { useRegionStore } from '@/store/use-regions';
 import InputNumberForm from '@/components/ui2/InputNumberForm';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { cn } from '@/lib/utils';
-import { Separator } from '@/components/ui/separator';
 import SelectForm from '@/components/ui2/SelectForm/SelectForm';
-import { useRegionStore } from '@/store/use-regions';
+import { cn } from '@/lib/utils';
 
-const AddMiddleSchool = () => {
-  const { handleCancel, openDialog } = useSelectedRow();
+const EditMiddleSchool = () => {
+  const { handleCancel, openDialog, currentRow } = useSelectedRow();
+  if (!currentRow) throw new Error('No current row selected');
   const queryClient = useQueryClient();
+  const school = currentRow;
 
-  const createMiddleSchool = async (data: CreateMiddleSchoolRequest) =>
-    apiService.postThrowable(apiRoutes.middleSchools.create(), data);
+  const updateMiddleSchool = async ({
+    middleSchoolId,
+    data,
+  }: {
+    middleSchoolId: string;
+    data: UpdateMiddleSchoolRequest;
+  }) => apiService.putThrowable(apiRoutes.middleSchools.update(middleSchoolId), data);
   const { mutateAsync, isPending } = useMutation({
-    mutationKey: ['middleSchools', 'create'],
-    mutationFn: createMiddleSchool,
+    mutationKey: ['middleSchools', 'update'],
+    mutationFn: updateMiddleSchool,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['middleSchools'], exact: false });
       form.reset();
@@ -47,12 +53,18 @@ const AddMiddleSchool = () => {
     },
   });
 
-  const defaultValues: CreateMiddleSchoolRequest = {
-    name: '',
-    isPublic: true,
-    staffCount: 0,
-    regionId: '',
-    director: null,
+  const defaultValues: UpdateMiddleSchoolRequest = {
+    name: school.name,
+    isPublic: school.isPublic,
+    staffCount: school.staffCount,
+    regionId: school.region?.id ?? '',
+    director: school.director
+      ? {
+          name: school.director.name,
+          email: school.director.email,
+          phone: school.director.phone,
+        }
+      : null,
   };
 
   const regions = useRegionStore((state) => state.regions);
@@ -64,8 +76,8 @@ const AddMiddleSchool = () => {
     },
     {} as Record<string, string>,
   );
-  const form = useForm<CreateMiddleSchoolRequest>({
-    resolver: zodResolver(createMiddleSchoolRequestSchema),
+  const form = useForm<UpdateMiddleSchoolRequest>({
+    resolver: zodResolver(updateMiddleSchoolRequestSchema),
     defaultValues: defaultValues,
   });
 
@@ -76,28 +88,28 @@ const AddMiddleSchool = () => {
     }
   };
 
-  const onSubmit: SubmitHandler<CreateMiddleSchoolRequest> = async (data) => {
+  const onSubmit: SubmitHandler<UpdateMiddleSchoolRequest> = async (data) => {
     try {
-      await mutateAsync(data);
-      toast.success('Middle school created successfully');
+      await mutateAsync({ middleSchoolId: school.id, data });
+      toast.success('Middle school updated successfully');
     } catch (error) {
       console.log(error);
 
-      toast.error('Failed to create middle school');
+      toast.error('Failed to update middle school');
     }
   };
 
-  const dialogIsOpen = openDialog === 'add';
+  const dialogIsOpen = openDialog === 'edit';
 
   console.log('form :', form.getValues());
   console.log('erros : ', form.formState.errors);
   return (
     <Dialog onOpenChange={onOpenChange} open={dialogIsOpen}>
-      <DialogContent className="sm:max-w-106.25 h-[calc(100vh-4rem)] flex flex-col overflow-hidden" dir="rtl">
+      <DialogContent className="sm:max-w-106.25 h-[calc(100vh-4rem)] flex flex-col overflow-hidden">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 flex flex-col h-full ">
           <DialogHeader>
-            <DialogTitle>إضافة مدرسة اعدادية جديدة</DialogTitle>
-            <DialogDescription>املأ النموذج أدناه لإنشاء مدرسة إعدادية جديدة.</DialogDescription>
+            <DialogTitle>Edit Middle School</DialogTitle>
+            <DialogDescription>Fill the form below to edit the middle school.</DialogDescription>
           </DialogHeader>
           <div className=" flex-1 overflow-y-auto pr-2">
             <FieldGroup>
@@ -106,8 +118,8 @@ const AddMiddleSchool = () => {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={`name-input`}>الاسم</FieldLabel>
-                    <Input {...field} id={`name-input`} aria-invalid={fieldState.invalid} placeholder="الاسم" />
+                    <FieldLabel htmlFor={`name-input`}>Name</FieldLabel>
+                    <Input {...field} id={`name-input`} aria-invalid={fieldState.invalid} placeholder="Name" />
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
                 )}
@@ -118,8 +130,8 @@ const AddMiddleSchool = () => {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={`staffCount-input`}>عدد الطاقم</FieldLabel>
-                    <InputNumberForm field={field} emptyInitially placeholder="عدد الطاقم" />
+                    <FieldLabel htmlFor={`staffCount-input`}>Staff Count</FieldLabel>
+                    <InputNumberForm field={field} placeholder="Staff Count" />
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
                 )}
@@ -133,8 +145,10 @@ const AddMiddleSchool = () => {
                     <Label className="p-4 space-x-2 cursor-pointer  flex items-start rounded-lg border has-aria-checked:border-blue-600 has-aria-checked:bg-blue-50 dark:has-aria-checked:border-blue-900 dark:has-aria-checked:bg-blue-950">
                       <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                       <div className="flex flex-col space-y-2 leading-none  ">
-                        <h2>عمومية</h2>
-                        <p className=" text-muted-foreground">يشير إلى ما إذا كانت المدرسة الإعدادية مؤسسة عامة.</p>
+                        <h2>Is Public</h2>
+                        <p className=" text-muted-foreground">
+                          Indicates whether the middle school is a public institution.
+                        </p>
                       </div>
                     </Label>
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -147,12 +161,12 @@ const AddMiddleSchool = () => {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={`regionId-input`}>المعتمدية</FieldLabel>
+                    <FieldLabel htmlFor={`regionId-input`}>Region</FieldLabel>
                     <SelectForm
                       field={field}
-                      label="المعتمدية"
+                      label="Region"
                       options={regionSelectOptions}
-                      placeholder="اختر المعتمدية"
+                      placeholder="Select region"
                     />
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
@@ -176,10 +190,10 @@ const AddMiddleSchool = () => {
                               checked={field.value !== null}
                               onCheckedChange={(checked) => field.onChange(checked ? {} : null)}
                             />
-                            <span className=" text-lg text-left">المدير</span>
+                            <span className=" text-lg text-left">Director</span>
                           </div>
                           <p className=" text-muted-foreground leading-none text-xs">
-                            يشير إلى ما إذا كانت المدرسة الإعدادية لديها مدير معين.
+                            Indicates whether the middle school has an assigned director.
                           </p>
                           <Separator />
                         </Label>
@@ -195,12 +209,12 @@ const AddMiddleSchool = () => {
                             control={form.control}
                             render={({ field, fieldState }) => (
                               <Field data-invalid={fieldState.invalid} className="flex gap-1">
-                                <FieldLabel htmlFor={`director-name-input`}>اسم المدير</FieldLabel>
+                                <FieldLabel htmlFor={`director-name-input`}>Director Name</FieldLabel>
                                 <Input
                                   {...field}
                                   id={`director-name-input`}
                                   aria-invalid={fieldState.invalid}
-                                  placeholder="اسم المدير"
+                                  placeholder="Director Name"
                                 />
                                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                               </Field>
@@ -212,12 +226,12 @@ const AddMiddleSchool = () => {
                             control={form.control}
                             render={({ field, fieldState }) => (
                               <Field data-invalid={fieldState.invalid} className="flex gap-1">
-                                <FieldLabel htmlFor={`director-email-input`}>بريد المدير</FieldLabel>
+                                <FieldLabel htmlFor={`director-email-input`}>Director Email</FieldLabel>
                                 <Input
                                   {...field}
                                   id={`director-email-input`}
                                   aria-invalid={fieldState.invalid}
-                                  placeholder="بريد المدير"
+                                  placeholder="Director Email"
                                   value={field.value ?? ''}
                                 />
                                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -230,12 +244,12 @@ const AddMiddleSchool = () => {
                             control={form.control}
                             render={({ field, fieldState }) => (
                               <Field data-invalid={fieldState.invalid} className="flex gap-1">
-                                <FieldLabel htmlFor={`director-phone-input`}>هاتف المدير</FieldLabel>
+                                <FieldLabel htmlFor={`director-phone-input`}>Director Phone</FieldLabel>
                                 <Input
                                   {...field}
                                   id={`director-phone-input`}
                                   aria-invalid={fieldState.invalid}
-                                  placeholder="هاتف المدير"
+                                  placeholder="Director Phone"
                                   value={field.value ?? ''}
                                 />
                                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -254,11 +268,11 @@ const AddMiddleSchool = () => {
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline" onClick={handleCancel}>
-                إلغاء
+                Cancel
               </Button>
             </DialogClose>
             <Button type="submit" className=" w-40" disabled={isPending}>
-              {isPending ? <Spinner /> : <span>إنشاء مدرسة إعدادية</span>}
+              {isPending ? <Spinner /> : <span>Update Middle School</span>}
             </Button>
           </DialogFooter>
         </form>
@@ -267,4 +281,4 @@ const AddMiddleSchool = () => {
   );
 };
 
-export default AddMiddleSchool;
+export default EditMiddleSchool;

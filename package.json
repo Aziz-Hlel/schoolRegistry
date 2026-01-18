@@ -6,6 +6,8 @@
     "prepare": "husky",
     "format:fix": "prettier --write .",
     "local": "node scripts/docker-up.js local && pnpm -r run dev",
+    "local:api": "pnpm --filter api run dev",
+    "local:admin": "pnpm --filter admin run dev",
     "dev": "pnpm -r run dev",
     "test": ""
   },
